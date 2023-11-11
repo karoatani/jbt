@@ -8,6 +8,7 @@ djangorestframework = "*"
 django = "*"
 django-filter = "*"
 markdown = "*"
+pyotp = "*"
 
 [dev-packages]
 

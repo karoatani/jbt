@@ -1,5 +1,12 @@
 from rest_framework import routers
-from .views import UserViewSet, InterviewViewSet, TrackingViewSet, JobViewSet
+from django.urls import path
+from .views import (
+    UserViewSet,
+    InterviewViewSet,
+    TrackingViewSet,
+    JobViewSet,
+    OtpGenateView,
+)
 
 
 router = routers.SimpleRouter()
@@ -10,4 +17,8 @@ router.register(r"jobs", JobViewSet)
 router.register(r"interview", InterviewViewSet)
 
 router.register(r"tracking", TrackingViewSet)
-urlpatterns = router.urls
+
+urlpatterns = [
+    path("otp/", OtpGenateView.as_view()),
+]
+urlpatterns += router.urls

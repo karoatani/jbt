@@ -8,7 +8,11 @@ from .serializers import (
 )
 from .models import User, Job, Interview, Tracking
 from rest_framework import viewsets
+from rest_framework.views import APIView
 from rest_framework.exceptions import PermissionDenied
+from .utils import generate
+from datetime import datetime, timedelta
+from rest_framework.status import HTTP_200_OK, HTTP_204_NO_CONTENT
 
 # Create your views here.
 
@@ -116,3 +120,30 @@ class TrackingViewSet(viewsets.ModelViewSet):
         if request.user.is_superuser or request.user.id == pk:
             return super().destroy(request, *args, **kwargs)
         raise PermissionDenied
+
+
+# Otp verification Endpoint
+class OtpGenateView(APIView):
+    def get(self, request):
+        otp = generate(60)
+        request.session["otp"] = otp.now()
+        request.session["expiry_date"] = (
+            datetime.now() + timedelta(minutes=1)
+        ).isoformat()
+        return Response({"otp": request.session["otp"]}, status=HTTP_200_OK)
+
+    def post(self, request):
+        code = request.data.get("otp")
+
+        print(request.session["otp"] == code)
+        print(code)
+        if datetime.now() < datetime.fromisoformat(request.session["expiry_date"]):
+            if request.session["otp"] == code:
+                return Response({}, status=HTTP_200_OK)
+        return Response({"error": "invalid otp"}, status=HTTP_204_NO_CONTENT)
+
+
+# notification system
+# monitoring tools
+# job board integration
+# sending and receiving mail
