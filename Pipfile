@@ -9,6 +9,8 @@ django = "*"
 django-filter = "*"
 markdown = "*"
 pyotp = "*"
+selenium = "*"
+requests = "*"
 
 [dev-packages]
 

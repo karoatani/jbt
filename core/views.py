@@ -143,7 +143,7 @@ class OtpGenateView(APIView):
         return Response({"error": "invalid otp"}, status=HTTP_204_NO_CONTENT)
 
 
-# notification system
-# monitoring tools
 # job board integration
+# notification system# monitoring tools
+
 # sending and receiving mail
