@@ -5,8 +5,9 @@ from .serializers import (
     JobSerializer,
     InterviewSerializer,
     TrackingSerializer,
+    ListingSerializer,
 )
-from .models import User, Job, Interview, Tracking
+from .models import User, Job, Interview, Tracking, Listing
 from rest_framework import viewsets
 from rest_framework.views import APIView
 from rest_framework.exceptions import PermissionDenied
@@ -144,6 +145,15 @@ class OtpGenateView(APIView):
 
 
 # job board integration
-# notification system# monitoring tools
+
+
+class ListingViewSet(viewsets.ModelViewSet):
+    serializer_class = ListingSerializer
+    queryset = Listing.objects.all()
+    permission_classes = [IsAuthenticated]
+
+
+# notification system
+# monitoring tools
 
 # sending and receiving mail

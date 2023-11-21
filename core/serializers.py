@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import User, Job, Interview, Tracking
+from .models import User, Job, Interview, Tracking, Listing
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -48,3 +48,9 @@ class TrackingSerializer(serializers.ModelSerializer):
     class Meta:
         model = Tracking
         fields = ["id", "job", "created_at", "modiefied_date", "stages"]
+
+
+class ListingSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Listing
+        fields = "__all__"

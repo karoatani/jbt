@@ -4,6 +4,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from django.conf import settings
 import os
 import json
 
@@ -16,21 +17,17 @@ class Bot(webdriver.Chrome):
     def __init__(
         self, options: Options = None, service: Service = None, keep_alive: bool = True
     ) -> None:
-        #
+        options = webdriver.ChromeOptions()
+        options.add_argument("--headless")
         super().__init__(options, service, keep_alive)
         self.implicitly_wait(10)
 
     def start_request(self, url):
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
-            "Accept-Language": "en-US,en;q=0.9",
-            "Accept-Encoding": "gzip, deflate",
-            "Connection": "keep-alive",
-            "Accept": "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-        }
+        """Make a request to a page"""
         return self.get(url)
 
     def search(self, field):
+        """Search for job posting"""
         search_form = self.find_element(By.ID, "jobsearch")
         search_field = search_form.find_element(By.ID, "text-input-what")
         btn = search_form.find_element(
@@ -86,21 +83,14 @@ class Bot(webdriver.Chrome):
             By.XPATH, '//div[@data-testid = "inlineHeader-companyLocation"]'
         ).text
 
-        try:
-            job_type = self.find_element(By.XPATH, "//p[text()='Job Type:']").text or ""
-        except:
-            job_type = " "
-            pass
-
         job_content = self.find_element(By.ID, "jobDescriptionText").text
 
         return {
-            "job title": job_title,
+            "job_title": job_title,
             "company_name": company_name,
             "company_location": company_location,
-            "job type": job_type,
-            "job content": job_content,
-            "url": url,
+            "job_content": job_content,
+            "job_url": url,
         }
 
     def to_json(self, obj):
@@ -115,7 +105,8 @@ class Bot(webdriver.Chrome):
         else:
             with open(file_path, "r+") as file:
                 data = json.load(file)
-                data.append(obj)
-                file.seek(0)  # Move the file pointer to the beginning
-                json.dump(data, file, indent=4)
-                file.truncate()
+                if obj not in data:
+                    data.append(obj)
+                    file.seek(0)  # Move the file pointer to the beginning
+                    json.dump(data, file, indent=4)
+                    file.truncate()
