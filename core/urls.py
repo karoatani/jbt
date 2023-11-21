@@ -5,6 +5,7 @@ from .views import (
     InterviewViewSet,
     TrackingViewSet,
     JobViewSet,
+    ListingViewSet,
     OtpGenateView,
 )
 
@@ -17,6 +18,7 @@ router.register(r"jobs", JobViewSet)
 router.register(r"interview", InterviewViewSet)
 
 router.register(r"tracking", TrackingViewSet)
+router.register(r"jobs-list", ListingViewSet)
 
 urlpatterns = [
     path("otp/", OtpGenateView.as_view()),

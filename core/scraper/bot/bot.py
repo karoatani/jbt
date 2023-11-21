@@ -4,6 +4,7 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from django.conf import settings
 import os
 import json
 
@@ -16,7 +17,8 @@ class Bot(webdriver.Chrome):
     def __init__(
         self, options: Options = None, service: Service = None, keep_alive: bool = True
     ) -> None:
-        #
+        options = webdriver.ChromeOptions()
+        options.add_argument("--headless")
         super().__init__(options, service, keep_alive)
         self.implicitly_wait(10)
 
@@ -86,21 +88,14 @@ class Bot(webdriver.Chrome):
             By.XPATH, '//div[@data-testid = "inlineHeader-companyLocation"]'
         ).text
 
-        try:
-            job_type = self.find_element(By.XPATH, "//p[text()='Job Type:']").text or ""
-        except:
-            job_type = " "
-            pass
-
         job_content = self.find_element(By.ID, "jobDescriptionText").text
 
         return {
-            "job title": job_title,
+            "job_title": job_title,
             "company_name": company_name,
             "company_location": company_location,
-            "job type": job_type,
-            "job content": job_content,
-            "url": url,
+            "job_content": job_content,
+            "job_url": url,
         }
 
     def to_json(self, obj):
@@ -115,7 +110,8 @@ class Bot(webdriver.Chrome):
         else:
             with open(file_path, "r+") as file:
                 data = json.load(file)
-                data.append(obj)
-                file.seek(0)  # Move the file pointer to the beginning
-                json.dump(data, file, indent=4)
-                file.truncate()
+                if obj not in data:
+                    data.append(obj)
+                    file.seek(0)  # Move the file pointer to the beginning
+                    json.dump(data, file, indent=4)
+                    file.truncate()

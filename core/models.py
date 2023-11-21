@@ -80,3 +80,11 @@ class Tracking(models.Model):
     created_at = models.DateTimeField(auto_now_add=True)
     modiefied_date = models.DateTimeField(auto_now=True)
     stages = models.CharField(max_length=9, choices=STAGES_CHOICES, default="SUBMITTED")
+
+
+class Listing(models.Model):
+    job_title = models.CharField(max_length=500)
+    company_name = models.CharField(max_length=255)
+    company_location = models.CharField(max_length=1000)
+    job_content = models.TextField(unique=True)
+    job_url = models.URLField()
