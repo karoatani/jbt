@@ -23,16 +23,11 @@ class Bot(webdriver.Chrome):
         self.implicitly_wait(10)
 
     def start_request(self, url):
-        headers = {
-            "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/58.0.3029.110 Safari/537.3",
-            "Accept-Language": "en-US,en;q=0.9",
-            "Accept-Encoding": "gzip, deflate",
-            "Connection": "keep-alive",
-            "Accept": "Accept: text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,*/*;q=0.8",
-        }
+        """Make a request to a page"""
         return self.get(url)
 
     def search(self, field):
+        """Search for job posting"""
         search_form = self.find_element(By.ID, "jobsearch")
         search_field = search_form.find_element(By.ID, "text-input-what")
         btn = search_form.find_element(
